@@ -6,7 +6,8 @@ export const arweave = Arweave.init({
   protocol: "https",
 });
 
-export const maxMessageLength = 1024;
+// export const maxMessageLength = 1024;
+export const maxMessageLength = 100000;
 
 export const isWellFormattedAddress = (input) => {
   const re = /^[a-zA-Z0-9_]{43}$/;
@@ -58,6 +59,7 @@ export const buildQuery = ({ count, address, topic } = {}) => {
     },`;
   }
 
+  //values: ["text/plain"],
   const queryObject = {
     query: `{
     transactions(first: ${count}, ${ownersFilter}
@@ -68,7 +70,7 @@ export const buildQuery = ({ count, address, topic } = {}) => {
         },
         {
           name: "Content-Type",
-          values: ["text/plain"]
+          values: ["video/mp4"]
         },
         ${topicFilter}
       ]
