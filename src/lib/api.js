@@ -7,7 +7,7 @@ export const arweave = Arweave.init({
 });
 
 // export const maxMessageLength = 1024;
-export const maxMessageLength = 100000;
+export const maxMessageLength = 100000000;
 
 export const isWellFormattedAddress = (input) => {
   const re = /^[a-zA-Z0-9_]{43}$/;
@@ -32,7 +32,7 @@ export const createPostInfo = (node) => {
   };
   if (postInfo.length <= maxMessageLength) {
     postInfo.request = arweave.api
-      .get(`/${node.id}`, { timeout: 10000 })
+      .get(`/${node.id}`, { timeout: 100000 })
       .catch(() => {
         postInfo.error = "timeout loading data";
       });

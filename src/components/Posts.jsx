@@ -13,11 +13,13 @@ export const Posts = (props) => {
 };
 
 const PostItem = (props) => {
-  const [postMessage, setPostMessage] = React.useState("");
+  // const [postMessage, setPostMessage] = React.useState("");
+  const [postVideo, setPostVideo] = React.useState();
   const [statusMessage, setStatusMessage] = React.useState("");
 
   React.useEffect(() => {
-    let newPostMessage = "";
+    // let newPostMessage = "";
+    let newPostVideo;
     let newStatus = "";
 
     if (!props.postInfo?.message) {
@@ -25,18 +27,27 @@ const PostItem = (props) => {
       let isCancelled = false;
 
       const getPostMessage = async () => {
-        setPostMessage(
-          "s".repeat(
-            Math.min(Math.max(props.postInfo.length - 75, 0), maxMessageLength)
-          )
-        );
+        // setPostMessage(
+        //   "s".repeat(
+        //     Math.min(Math.max(props.postInfo.length - 75, 0), maxMessageLength)
+        //   )
+        // );
         const response = await props.postInfo.request;
         switch (response?.status) {
           case 200:
           case 202:
-            props.postInfo.message = response.data.toString();
+            // props.postInfo.message = response.data.toString();
+            props.postInfo.message = response.data;
+            props.postInfo.video = window.URL.createObjectURL(
+              new Blob([response.data], {
+                type: "video/mp4",
+              })
+            );
+            console.log("\\", props.postInfo.video);
+
             newStatus = "";
-            newPostMessage = props.postInfo.message;
+            // newPostMessage = props.postInfo.message;
+            newPostVideo = props.postInfo.video;
             break;
           case 404:
             newStatus = "Not Found";
@@ -50,12 +61,14 @@ const PostItem = (props) => {
 
         if (isCancelled) return;
 
-        setPostMessage(newPostMessage);
+        // setPostMessage(newPostMessage);
+        setPostVideo(newPostVideo);
         setStatusMessage(newStatus);
       };
 
       if (props.postInfo?.error) {
-        setPostMessage("");
+        // setPostMessage("");
+        setPostVideo();
         setStatusMessage(props.postInfo.error);
       } else {
         getPostMessage();
@@ -86,7 +99,14 @@ const PostItem = (props) => {
             <time>{getPostTime(props.postInfo?.timestamp || 0)}</time>
           </div>
           <div className="postRow">
-            {props.postInfo?.message || postMessage}
+            <>
+              {props.postInfo.video && (
+                <video controls width="250">
+                  <source src={props.postInfo.video} type="video/mp4" />
+                </video>
+              )}
+            </>
+            {/* {props.postInfo?.message || postMessage} */}
             {statusMessage && <div className="status"> {statusMessage}</div>}
           </div>
           {renderTopic(props.postInfo.topic)}
