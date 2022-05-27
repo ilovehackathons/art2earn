@@ -31,7 +31,7 @@ export const createPostInfo = (node) => {
   };
   if (postInfo.length <= maxMessageLength) {
     postInfo.request = arweave.api
-      .get(`/${node.id}`, { timeout: 100000 })
+      .get(`/${node.id}`, { timeout: 10000000 })
       .catch(() => {
         postInfo.error = "timeout loading data";
       });
