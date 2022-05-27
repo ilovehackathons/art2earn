@@ -13,13 +13,9 @@ export const Posts = (props) => {
 };
 
 const PostItem = (props) => {
-  // const [postMessage, setPostMessage] = React.useState("");
-  const [postVideo, setPostVideo] = React.useState();
   const [statusMessage, setStatusMessage] = React.useState("");
 
   React.useEffect(() => {
-    // let newPostMessage = "";
-    let newPostVideo;
     let newStatus = "";
 
     if (!props.postInfo?.message) {
@@ -27,27 +23,17 @@ const PostItem = (props) => {
       let isCancelled = false;
 
       const getPostMessage = async () => {
-        // setPostMessage(
-        //   "s".repeat(
-        //     Math.min(Math.max(props.postInfo.length - 75, 0), maxMessageLength)
-        //   )
-        // );
         const response = await props.postInfo.request;
         switch (response?.status) {
           case 200:
           case 202:
-            // props.postInfo.message = response.data.toString();
-            props.postInfo.message = response.data;
             props.postInfo.video = window.URL.createObjectURL(
-              new Blob([response.data], {
-                type: "video/mp4",
-              })
+              await (
+                await fetch(`https://arweave.net/${props.postInfo.txid}`)
+              ).blob()
             );
-            console.log("\\", props.postInfo.video);
 
             newStatus = "";
-            // newPostMessage = props.postInfo.message;
-            newPostVideo = props.postInfo.video;
             break;
           case 404:
             newStatus = "Not Found";
@@ -60,15 +46,10 @@ const PostItem = (props) => {
         }
 
         if (isCancelled) return;
-
-        // setPostMessage(newPostMessage);
-        setPostVideo(newPostVideo);
         setStatusMessage(newStatus);
       };
 
       if (props.postInfo?.error) {
-        // setPostMessage("");
-        setPostVideo();
         setStatusMessage(props.postInfo.error);
       } else {
         getPostMessage();
@@ -106,7 +87,6 @@ const PostItem = (props) => {
                 </video>
               )}
             </>
-            {/* {props.postInfo?.message || postMessage} */}
             {statusMessage && <div className="status"> {statusMessage}</div>}
           </div>
           {renderTopic(props.postInfo.topic)}
