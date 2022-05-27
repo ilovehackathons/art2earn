@@ -6,7 +6,6 @@ export const arweave = Arweave.init({
   protocol: "https",
 });
 
-// export const maxMessageLength = 1024;
 export const maxMessageLength = 100000000;
 
 export const isWellFormattedAddress = (input) => {
@@ -59,14 +58,13 @@ export const buildQuery = ({ count, address, topic } = {}) => {
     },`;
   }
 
-  //values: ["text/plain"],
   const queryObject = {
     query: `{
     transactions(first: ${count}, ${ownersFilter}
       tags: [
         {
           name: "App-Name",
-          values: ["PublicSquare"]
+          values: ["art2earn"]
         },
         {
           name: "Content-Type",

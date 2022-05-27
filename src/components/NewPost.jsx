@@ -1,9 +1,7 @@
 import React from "react";
-// import TextareaAutosize from "react-textarea-autosize";
 import { arweave, getTopicString } from "../lib/api";
 
 export const NewPost = (props) => {
-  // const [postValue, setPostValue] = React.useState("");
   const [isPosting, setIsPosting] = React.useState(false);
   const [topicValue, setTopicValue] = React.useState("");
   const [videoValue, setVideoValue] = React.useState();
@@ -14,35 +12,12 @@ export const NewPost = (props) => {
     setTopicValue(dashedTopic);
   }
 
-  // async function onPostButtonClicked() {
-  //   setIsPosting(true);
-  //   let tx = await arweave.createTransaction({ data: postValue });
-  //   tx.addTag("App-Name", "PublicSquare");
-  //   tx.addTag("Content-Type", "text/plain");
-  //   tx.addTag("Version", "1.0.1");
-  //   tx.addTag("Type", "post");
-  //   if (topicValue) {
-  //     tx.addTag("Topic", topicValue);
-  //   }
-  //   try {
-  //     let result = await window.arweaveWallet.dispatch(tx);
-  //     setPostValue("");
-  //     setTopicValue("");
-  //     if (props.onPostMessage) {
-  //       props.onPostMessage(result.id);
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  //   setIsPosting(false);
-  // }
-
   async function onVideoButtonClicked() {
     setIsPosting(true);
     let tx = await arweave.createTransaction({
       data: await videoValue.arrayBuffer(),
     });
-    tx.addTag("App-Name", "PublicSquare");
+    tx.addTag("App-Name", "art2earn");
     tx.addTag("Content-Type", "video/mp4");
     tx.addTag("Version", "1.0.1");
     tx.addTag("Type", "post");
@@ -51,7 +26,6 @@ export const NewPost = (props) => {
     }
     try {
       let result = await window.arweaveWallet.dispatch(tx);
-      // setPostValue("");
       setVideoValue();
       setTopicValue("");
       if (props.onPostMessage) {
@@ -63,7 +37,6 @@ export const NewPost = (props) => {
     setIsPosting(false);
   }
 
-  // let isDisabled = postValue === "";
   let isDisabled = !videoValue;
 
   if (props.isLoggedIn) {
@@ -71,7 +44,6 @@ export const NewPost = (props) => {
       return (
         <div className="newPost">
           <div className="newPostScrim" />
-          {/* <TextareaAutosize value={postValue} readOnly={true} /> */}
           <div className="newPost-postRow">
             <div className="topic">
               #
@@ -94,12 +66,6 @@ export const NewPost = (props) => {
     } else {
       return (
         <div className="newPost">
-          {/* <TextareaAutosize
-            value={postValue}
-            onChange={(e) => setPostValue(e.target.value)}
-            rows="1"
-            placeholder="What do you have to say?"
-          /> */}
           <input
             type="file"
             accept="video/mp4"
@@ -120,13 +86,6 @@ export const NewPost = (props) => {
               />
             </div>
             <div>
-              {/* <button
-                className="submitButton"
-                disabled={isDisabled}
-                onClick={onPostButtonClicked}
-              >
-                Post
-              </button> */}
               <button
                 className="submitButton"
                 onClick={onVideoButtonClicked}
